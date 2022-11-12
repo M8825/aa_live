@@ -124,3 +124,27 @@ def vowels_finder(word)
     arr 
 end 
 
+def silly_talk(sent)
+  vowels = 'aeiouAEIOU'
+  sentArr = sent.split(' ')
+
+  sentArr.map do |word|
+    if vowels.include?(word[-1])
+      word + word[-1]
+    else
+      followed_by_b(word)
+    end
+  end.join(' ')
+end
+
+def followed_by_b(word)
+  vowels = 'aeiouAEIOU'
+  word.split('').map { |char| vowels.include?(char) ? char + 'b' + char.downcase : char }.join('')
+end
+
+puts
+p silly_talk('Kids like cats and dogs') == 'Kibids likee cabats aband dobogs'
+p silly_talk('Stop that scooter') == 'Stobop thabat scobooboteber'
+p silly_talk('They can code') == 'Thebey caban codee'
+p silly_talk('He flew to Italy') == 'Hee flebew too Ibitabaly'
+
