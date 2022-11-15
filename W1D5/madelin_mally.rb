@@ -1,7 +1,17 @@
+require 'byebug'
+
 def duos(str)
-  (0...str.length).count { |i| str[i] == str[i + 1] }
+  count = 0
+
+  str.each_char.with_index do |char, i|
+   count += 1 if str[i] == str[i + 1].to_i
+  end
+
+  count 
 end
 
+puts
+puts 'DUOS:'
 p duos('bootcamp')      # 1
 p duos('wxxyzz')        # 2
 p duos('hoooraay')      # 3
@@ -9,44 +19,29 @@ p duos('dinosaurs')     # 0
 p duos('e')             # 0
 
 def sentence_swap(sent, hash)
-  sent.split(' ').map { |word| hash.has_key? ? hash[word] : word }.join(' ')
-end
-
-def sentence_swap(sentence, hash)
-  words = sentence.split(' ')
-  new_sen = []
-
-  words.each do |word|
-    new_sen << if hash.has_key?(word)
-                 hash[word]
-               else
-                 word
-               end
-  end
-  new_sen.join(' ')
+  sent.split(' ').map { |word| hash[word] ? hash[word] : word}.join(' ')
 end
 
 puts
+puts 'SENTENCE SWAP:'
 p sentence_swap('anything you can do I can do',
-                'anything' => 'nothing', 'do' => 'drink', 'can' => 'shall') # 'nothing you shall drink I shall drink'
+                'anything' => 'nothing', 'do' => 'drink', 'can' => 'shall') == 'nothing you shall drink I shall drink'
 
 p sentence_swap('what a sad ad',
-                'cat' => 'dog', 'sad' => 'happy', 'what' => 'make') # 'make a happy ad'
+                'cat' => 'dog', 'sad' => 'happy', 'what' => 'make') == 'make a happy ad'
 
 p sentence_swap('keep coding okay',
-                'coding' => 'running', 'kay' => 'pen') # 'keep running okay'
+                'coding' => 'running', 'kay' => 'pen') == 'keep running okay'
 
 def hash_mapped(hash, prc, &blk)
-  new_hash = {}
+  output = {}
 
-  hash.each do |k, v|
-    new_hash[blk.call(k)] = prc.call(v)
-  end
-
-  new_hash
+  hash.each { |k, v| output[blk.call(k)] = prc.call(v)}
+  output
 end
 
 puts
+puts "HASH MAPPED:"
 double = proc { |n| n * 2 }
 p hash_mapped({ 'a' => 4, 'x' => 7, 'c' => -3 }, double) { |k| k.upcase + '!!' }
 # {"A!!"=>8, "X!!"=>14, "C!!"=>-6}
@@ -56,15 +51,15 @@ p hash_mapped({ -5 => %w[q r s], 6 => %w[w x] }, first) { |n| n * n }
 # {25=>"q", 36=>"w"}
 
 def counted_characters(str)
-  letterCount = Hash.new(0)
+  output = []
 
-  str.each_char { |char| letterCount[char] += 1 }
-  letterCount.keys.select do |key|
-    letterCount[key] > 2
-  end
+  str.each_char { |char| output << char if str.split('').count { |c| c == char } > 2 && !output.include?(char)}
+
+  return output
 end
 
 puts
+puts "COUNTED CHARACTERS"
 p counted_characters("that's alright folks") # ["t"]
 p counted_characters('mississippi') # ["i", "s"]
 p counted_characters('hot potato soup please') # ["o", "t", " ", "p"]
@@ -74,14 +69,19 @@ def triplet_true(str) # 'aaabccz' => 'a3bc2z'
   count = 1
 
   str.each_char.with_index do |char, i|
-    char == str[i + 1] ? count += 1 : count = 1
-    return true if count >= 3
+    if char == str[i + 1]
+      count += 1
+      return true if count == 3
+    else
+      count = 1
+    end
   end
 
-  false
+  return false
 end
 
 puts
+
 p triplet_true('caaabb')        # true
 p triplet_true('terrrrrible')   # true
 p triplet_true('runninggg')     # true
@@ -89,19 +89,11 @@ p triplet_true('bootcamp')      # false
 p triplet_true('e')             # false
 
 def energetic_encoding(str, hash)
-  str_new = ''
-  str.each_char do |char|
-    str_new += ' ' if char == ' '
-    if hash.keys.include?(char)
-      str_new += hash[char]
-    elsif !hash.keys.include?(char) && char != ' '
-      str_new += '?'
-    end
-  end
-  str_new
+  str.split('').map { |char| hash[char] ? hash[char] : char == ' ' ? char : '?' }.join('')
 end
 
 puts
+puts 'ENERGETIC ENCODING:'
 p energetic_encoding('sent sea',
                      'e' => 'i', 's' => 'z', 'n' => 'm', 't' => 'p', 'a' => 'u') # 'zimp ziu'
 
@@ -114,17 +106,19 @@ p energetic_encoding('hello world',
 p energetic_encoding('bike', {}) # '????'
 
 def uncompress(str)
-  newStr = ''
+  output = ''
 
-  str.each_char.with_index do |char, i|
-    num = str[i + 1].to_i
-    num.times { newStr += char }
+  i = 1
+  while i < str.length 
+    output += str[i - 1] * str[i].to_i
+    i += 2
   end
 
-  newStr
+  return output
 end
 
 puts
+puts 'uncompress:'.upcase
 p uncompress('a2b4c1') # 'aabbbbc'
 p uncompress('b1o2t1') # 'boot'
 p uncompress('x3y1x2z4') # 'xxxyxxzzz
@@ -292,22 +286,28 @@ p silly_talk('Stop that scooter') == 'Stobop thabat scobooboteber'
 p silly_talk('They can code') == 'Thebey caban codee'
 p silly_talk('He flew to Italy') == 'Hee flebew too Ibitabaly'
 
-def compress(str)
-  c = 1
-  newStr = ''
 
-  str.each_char.with_index do |char, i|
-    if char == str[i + 1]
-      c += 1
+
+def merge_sort(arr)
+  return arr if arr.length <= 1
+
+  mid = arr.length / 2
+  left = merge_sort(arr[0...mid])
+  right = merge_sort(arr[mid..-1])
+
+  merge(left, right)
+end
+
+def mereg(left, right)
+  sorted = []
+
+  until left.empty? || right.empty?
+    if left[0] < right[0]
+      sorted << left.shift
     else
-      newStr += c > 1 ? char + c.to_s : char
-      c = 1
+      sorted << right.shift
     end
   end
 
-  newStr
+  sorted + left + right
 end
-
-p compress('aabbbbc') == "a2b4c"
-p compress('boot') == "bo2t"
-p compress('xxxyxxzzzz') == "x3yx2z4"

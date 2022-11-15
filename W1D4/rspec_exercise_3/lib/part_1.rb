@@ -1,32 +1,23 @@
 def is_prime?(num)
   return false if num < 2
 
-  (2...num).each do |i|
-    return false if (num % i).zero?
-  end
-
-  true
+  (2...num).none? { |i| num % i == 0}
 end
 
 
 def nth_prime(n)
-  counter = 0
+  count = 0
   prime = 0
 
-  i = 2
-  while counter < n
-    if is_prime?(i)
-      prime = i 
-      counter += 1
-    end
-
-    i += 1
+  while count < n
+    prime += 1
+    count += 1 if is_prime?(prime)
   end
 
-  prime 
+  prime
 end
 
-def prime_range(num_1, num_2)
-  (num_1..num_2).select { |num| is_prime?(num)}
-end
 
+def prime_range(min, max)
+  (min..max).select { |i| is_prime?(i) }
+end

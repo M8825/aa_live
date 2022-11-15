@@ -1,18 +1,16 @@
-def element_count(arr)
+ def element_count(arr)
   hash = {}
-  arr.each { |ele| hash[ele] = arr.count(ele) }
+  arr.each { |ele| hash[ele] = arr.count { |element| ele == element} }
 
-  hash
-end
-
-
-def char_replace!(str, hash)
-  str.each_char.with_index do |char, i|
-    str[i] = hash[char] if hash[char]
-  end
-end
+  return hash
+ end
 
 
-def product_inject(arr)
-  arr.inject(&:*)
-end
+ def char_replace!(str, hash)
+  str.each_char.with_index { |char, i| hash[char] ? str[i] = hash[char] : str[i] = char}
+ end
+
+ 
+ def product_inject(nums)
+  nums.inject(&:*)
+ end
