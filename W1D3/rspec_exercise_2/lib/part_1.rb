@@ -1,53 +1,25 @@
 def partition(arr, num)
-    newArr = Array.new(2) { Array.new() }
-
-    arr.each do |ele|
-        if ele < num
-            newArr[0] << ele
-        else
-            newArr[1] << ele
-        end
-    end
-
-    newArr
+  ret_arr = Array.new(2) { Array.new }
+  arr.each { |ele| ele < num ? ret_arr[0] << ele : ret_arr[1] << ele } 
+  ret_arr
 end
 
 
 def merge(hash_1, hash_2)
-    resHash = {}
+  new_hash = {}
+  hash_1.each { |k, v| new_hash[k] = v}
+  hash_2.each { |k, v| new_hash[k] = v}
 
-    hash_1.each { |k, v| resHash[k] = v}
-    hash_2.each { |k, v| resHash[k] = v}
-
-    return resHash
+  new_hash
 end
 
 
 def censor(sent, arr)
-    vowels = 'aeiou'
-    words = sent.split(' ')
-
-    words.map { |word| arr.include?(word.downcase) ? replace_vowel(word) : word }.join(' ')
+  sent.split(' ').map { |word| arr.include?(word.downcase) ? word.gsub(/[aeiouAEIOU]/, '*') : word }.join(' ')
 end
 
 
-def replace_vowel(word)
-    vowels = 'aeiou'
-
-    word.each_char.with_index { |char, i| word[i] = "*" if vowels.include?(char.downcase)}
-end
-
-
-def power_of_two?(n)
-    i = 1
-
-    while i <= n
-        return true if i == n
-
-        i *= 2
-    end
-
-    return false
-end
-
+def power_of_two?(num)
+  (0..num / 2).any? { |i| 2 ** i == num }
+end 
 

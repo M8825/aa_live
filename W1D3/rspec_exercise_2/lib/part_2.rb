@@ -1,24 +1,19 @@
-
-def palindrome?(str)
-    return true if str.length <= 1
-
-    str[0] == str[-1] ? palindrome?(str[1...-1]) : false
+def palindrome?(string)
+  string == (string.length - 1).downto(0).map { |i| string[i] }.join('')
 end
 
-
-def substrings(string) # 'jump' => ['j', 'ju']
-    new_arr = [] # ['j', 'ju', 'jum']
-
-    string.each_char.with_index do |char, i| # i = 0
-        (i..string.length - 1).each do |j|   # j = 2
-            new_arr << string[i..j] # string[0..2] => 'ju'
-        end
+def substrings(string)
+  ret_arr = []
+  (0...string.length).each do |i|
+    (i...string.length).each do |j|
+      ret_arr << string[i..j]
     end
+  end
 
-    new_arr
+  ret_arr
 end
 
 
-def palindrome_substrings(str)
-    substrings(str).select { |ele| palindrome?(ele) }
+def palindrome_substrings(string)
+  substrings(string).select { |sub| palindrome?(sub) && sub.length > 1 }
 end
