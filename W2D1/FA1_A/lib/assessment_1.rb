@@ -17,12 +17,7 @@ end
 
 
 def array_of_hash_sum(hashes)
-  sum = 0
-  hashes.each do |hash|
-    sum += hash.values.sum
-  end
-
-  sum
+  hashes.inject(0) { |acc, hash| acc += hash.values.sum }
 end
 
 
