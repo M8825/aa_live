@@ -1,10 +1,12 @@
 require 'Set'
 
 class Hangman
-  DICTIONARY = ["cat", "dog", "bootcamp", "pizza"]
+  # DICTIONARY = ["cat", "dog", "bootcamp", "pizza"]
 
   def self.random_word
-    DICTIONARY.sample
+    words = File.readlines('dictionary.txt').map(&:chomp)
+    random_index = rand(0...words.length)
+    words[random_index]
   end
 
   attr_reader :guess_word, :attempted_chars, :remaining_incorrect_guesses
