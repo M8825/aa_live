@@ -70,3 +70,4 @@ class Startup
     other_startup.close
   end
 end
+
