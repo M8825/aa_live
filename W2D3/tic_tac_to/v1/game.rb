@@ -6,9 +6,9 @@ require_relative 'human_player'
 # It will also contain the main game loop
 class Game 
   # Accepts symbol marks of player_1 and player_2 (:X)
-  # Initalizes curr_player - By defauolt player_1
-  def initialize(palyer_1_mark, player_2_mark)
-    @player_1 = HumanPlayer.new(palyer_1_mark)
+  # Initializes curr_player - By default player_1
+  def initialize(player_1_mark, player_2_mark)
+    @player_1 = HumanPlayer.new(player_1_mark)
     @player_2 = HumanPlayer.new(player_2_mark)
     @board = Board.new
     @curr_player = @player_1
@@ -21,7 +21,7 @@ class Game
 
   # Runs the loop for a game by checking if there are empty positions in board
   # Asks current user for coordinates for their position
-  # Places mark in board. If current player won prints victoy message, otherwise
+  # Places mark in board. If current player won prints victory message, otherwise
   # switches current player
   def play
     while @board.empty_position?
